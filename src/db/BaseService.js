@@ -3,7 +3,10 @@ const sqlite3 = require('sqlite3').verbose();
 
 class BaseService {
     constructor() {
-        this.dbFilePath = path.join(__dirname, 'anas-traders.db');
+        const isDevelopment = process.env.NODE_ENV !== 'production';
+        this.dbFilePath = isDevelopment
+            ? path.resolve(__dirname, 'anas-traders.db')
+            : 'anas-traders.db';
         this.db = null;
     }
 
@@ -29,23 +32,20 @@ class BaseService {
         return new Promise((resolve, reject) => {
             this.openDatabase();
 
-            this.db.all(
-                query,
-                (err, rows) => {
-                    if (err) reject(err);
+            this.db.all(query, (err, rows) => {
+                if (err) reject(err);
 
-                    const data = [...rows];
+                const data = (rows && [...rows]) || [];
 
-                    this.closeDatabase();
-                    resolve(data);
-                }
-            );
+                this.closeDatabase();
+                resolve(data);
+            });
         });
-    }
+    };
 
     prepareStatement = (query, reject) => {
         this.openDatabase();
-        
+
         return this.db.prepare(query, err => {
             if (err) {
                 this.closeDatabase();
