@@ -1,16 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { HashRouter, Route, Link } from 'react-router-dom';
 
 import ShopManagement from '../app/ShopManagement.js';
 import AgentManagement from '../app/AgentManagement.js';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import BillManagement from '../app/BillManagement.js';
 
 function App() {
     return (
-        <div>
-            <Router>
+        <React.Fragment>
+            <HashRouter>
                 <div>
                     <ul>
                         <li>
@@ -22,24 +23,52 @@ function App() {
                         <li>
                             <Link to="/agents">Agents</Link>
                         </li>
+                        <li>
+                            <Link to="/bills">Bills</Link>
+                        </li>
                     </ul>
                     <hr />
-
-                    <Switch>
-                        <Route path="/shops">
-                            <ShopManagement />
-                        </Route>
-                        <Route path="/agents">
-                            <AgentManagement />
-                        </Route>
-                        <Route path="/">
-                            <ShopManagement />
-                        </Route>
-                    </Switch>
                 </div>
-            </Router>
-        </div>
+                <Route path="/" exact component={ShopManagement} />
+                <Route path="/shops" component={ShopManagement} />
+                <Route path="/agents" component={AgentManagement} />
+                <Route path="/bills" component={BillManagement} />
+            </HashRouter>
+        </React.Fragment>
     );
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+/*
+                <Nav tabs>
+                <NavItem>
+                    <NavLink to="/" active>Home</NavLink>
+                </NavItem>
+                    <NavItem>
+                        <Link to="/">Home</Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link to="/shops">Shops</Link>
+                    </NavItem>
+                    <NavItem>
+                        <Link to="/agents">Agents</Link>
+                    </NavItem>
+                </Nav>
+
+                <Navbar color="light" light expand="lg,md">
+                    <NavbarBrand href="/" className="mr-auto">
+                        Home
+                    </NavbarBrand>
+                    <Collapse isOpen={isOpen} navbar>
+                        <Nav className="mr-auto" navbar>
+                            <NavItem>
+                                <Link to="/shops">Shops</Link>
+                            </NavItem>
+                            <NavItem>
+                                <Link to="/agents">Agents</Link>
+                            </NavItem>
+                        </Nav>
+                    </Collapse>
+                </Navbar>
+ */

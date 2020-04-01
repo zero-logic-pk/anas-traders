@@ -15,22 +15,28 @@
         "postinstall": "electron-builder install-app-deps"
     },
     "dependencies": {
+        "@sweetalert/with-react": "^0.1.1",
         "ag-grid-community": "^22.1.1",
         "ag-grid-react": "^22.1.1",
         "bootstrap": "^4.4.1",
+        "moment": "^2.24.0",
         "react": "^16.12.0",
-        "react-bootstrap": "^1.0.0-beta.16",
         "react-dom": "^16.12.0",
         "react-router-dom": "^5.1.2",
+        "reactstrap": "^8.4.1",
         "source-map-support": "^0.5.12",
-        "sqlite3": "^4.1.1"
+        "sqlite": "^3.0.6",
+        "sqlite3": "^4.1.1",
+        "sweetalert": "^2.1.2"
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.8.3",
         "@babel/preset-react": "^7.8.3",
+        "@types/moment": "^2.13.0",
         "electron": "5.0.6",
         "electron-builder": "^21.0.11",
         "electron-webpack": "^2.7.4",
+        "prop-types": "^15.7.2",
         "webpack": "~4.35.3"
     },
     "build": {

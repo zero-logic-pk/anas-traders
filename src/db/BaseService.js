@@ -1,5 +1,5 @@
 import * as path from 'path';
-const sqlite3 = require('sqlite3').verbose();
+import sqlite from 'sqlite';
 
 class BaseService {
     constructor() {
@@ -10,57 +10,43 @@ class BaseService {
         this.db = null;
     }
 
-    openDatabase = () => {
-        this.db = new sqlite3.Database(this.dbFilePath, err => {
-            if (err) {
-                return console.error(err);
-            }
+    openDatabase = async () => {
+        this.db = await sqlite.open(this.dbFilePath, {
+            promise: Promise,
+            verbose: true
         });
 
         this.db.on('trace', query => console.log(query));
     };
 
-    closeDatabase = () => {
-        this.db.close(err => {
-            if (err) {
-                return console.error(err.message);
-            }
-        });
+    closeDatabase = () => this.db.close();
+
+    runAllQuery = async query => {
+        try {
+            await this.openDatabase();
+
+            const rows = await this.db.all(query);
+
+            return rows;
+        } catch (error) {
+            throw error;
+        } finally {
+            await this.db.close();
+        }
     };
 
-    runAllQuery = query => {
-        return new Promise((resolve, reject) => {
-            this.openDatabase();
-
-            this.db.all(query, (err, rows) => {
-                if (err) reject(err);
-
-                const data = (rows && [...rows]) || [];
-
-                this.closeDatabase();
-                resolve(data);
-            });
-        });
-    };
-
-    prepareStatement = (query, reject) => {
-        this.openDatabase();
-
-        return this.db.prepare(query, err => {
-            if (err) {
-                this.closeDatabase();
-                reject(err);
-            }
-        });
-    };
-
-    runStatement = (statement, resolve, reject) => {
-        statement.finalize(err => {
-            this.closeDatabase();
-            if (!err) {
-                resolve();
-            } else reject(err);
-        });
+    runStatement = async (query, params) => {
+        try {
+            await this.openDatabase();
+            
+            const statement = await this.db.prepare(query, params);
+            await statement.run();
+            await statement.finalize();
+        } catch (error) {
+            throw error;
+        } finally {
+            await this.db.close();
+        }
     };
 }
 
