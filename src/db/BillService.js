@@ -5,11 +5,16 @@ import BaseService from './BaseService';
 export default class BillService extends BaseService {
     getAll = () =>
         this.runAllQuery(`
-            SELECT b.id, b.createdOn, b.dueOn, b.amount, b.shopId, s.name as shopName, b.agentId, a.name as agentName FROM bill AS b
+            SELECT b.id, b.createdOn, b.dueOn, b.amount, b.shopId, s.name as shopName, b.agentId, a.name as agentName,
+            (SELECT SUM(bp.paidAmount) FROM bill_payment AS bp WHERE bp.billId = b.id) AS paidAmount
+            FROM bill AS b
             JOIN agents AS a on b.agentId = a.id
             JOIN shop AS s on b.shopId = s.id
             ORDER BY shopName;
         `);
+
+    getById = billId =>
+        this.executeQuery('SELECT * FROM bill WHERE id=?;', [billId]);
 
     add = billToAdd =>
         this.runStatement(
@@ -41,5 +46,22 @@ export default class BillService extends BaseService {
                 .fill('?')
                 .join(', ')})`,
             billIds
+        );
+
+    getBillPayments = billId =>
+        this.runAllQuery('SELECT * FROM bill_payment WHERE billId=?;', [
+            billId
+        ]);
+
+    addPayment = (payment, billId) =>
+        this.runStatement(
+            'INSERT INTO bill_payment (billId, dueOn, paidOn, paidAmount, isPaid) VALUES (?, ?, ?, ?, ?)',
+            [
+                billId,
+                payment.dueOn,
+                payment.paidOn,
+                payment.amount,
+                payment.amount > 0 ? 1 : 0
+            ]
         );
 }

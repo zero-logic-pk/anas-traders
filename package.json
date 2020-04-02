@@ -7,6 +7,7 @@
         "url": "https://github.com/EngrKhizarIqbal"
     },
     "license": "MIT",
+    "homepage": ".",
     "scripts": {
         "dev": "electron-webpack dev",
         "compile": "electron-webpack",
@@ -19,6 +20,7 @@
         "ag-grid-community": "^22.1.1",
         "ag-grid-react": "^22.1.1",
         "bootstrap": "^4.4.1",
+        "lodash": "^4.17.15",
         "moment": "^2.24.0",
         "react": "^16.12.0",
         "react-dom": "^16.12.0",
@@ -32,6 +34,7 @@
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.8.3",
         "@babel/preset-react": "^7.8.3",
+        "@types/lodash": "^4.14.149",
         "@types/moment": "^2.13.0",
         "electron": "5.0.6",
         "electron-builder": "^21.0.11",

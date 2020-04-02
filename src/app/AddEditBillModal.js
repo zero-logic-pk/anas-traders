@@ -24,7 +24,7 @@ class AddEditBillModal extends Component {
 
         const { bill } = props;
         if (!bill.id) {
-            bill.dueOn = moment().format('YYYY-MM-DD')
+            bill.dueOn = moment().format('YYYY-MM-DD');
         }
 
         this.state = {
@@ -110,12 +110,9 @@ class AddEditBillModal extends Component {
                     toggle={this.props.modalCloseCallback}
                     className={this.props.className}>
                     <ModalHeader toggle={this.props.modalCloseCallback}>
-                        Modal title
+                        {this.state.bill.id ? 'Update' : 'Add'} Bill
                     </ModalHeader>
                     <ModalBody>
-                        <div>
-                            <code>{JSON.stringify(this.state.bill)}</code>
-                        </div>
                         <Form>
                             <FormGroup>
                                 <Label for="shopId">Shop</Label>

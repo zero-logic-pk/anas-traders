@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter, Route, Link } from 'react-router-dom';
+import { MemoryRouter as Router, Route, Link } from 'react-router-dom';
+// import history from 'his';
 
 import ShopManagement from '../app/ShopManagement.js';
 import AgentManagement from '../app/AgentManagement.js';
@@ -11,12 +12,9 @@ import BillManagement from '../app/BillManagement.js';
 function App() {
     return (
         <React.Fragment>
-            <HashRouter>
+            <Router>
                 <div>
                     <ul>
-                        <li>
-                            <Link to="/">Home</Link>
-                        </li>
                         <li>
                             <Link to="/shops">Shops</Link>
                         </li>
@@ -26,14 +24,18 @@ function App() {
                         <li>
                             <Link to="/bills">Bills</Link>
                         </li>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
                     </ul>
                     <hr />
                 </div>
+                <Route path="#shops" component={ShopManagement} />
+                <Route path="#agents" component={AgentManagement} />
+                <Route path="#bills" component={BillManagement} />
+                <Route path="#" exact component={ShopManagement} />
                 <Route path="/" exact component={ShopManagement} />
-                <Route path="/shops" component={ShopManagement} />
-                <Route path="/agents" component={AgentManagement} />
-                <Route path="/bills" component={BillManagement} />
-            </HashRouter>
+            </Router>
         </React.Fragment>
     );
 }

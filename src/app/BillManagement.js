@@ -9,6 +9,7 @@ import AgentService from '../db/AgentService';
 import ShopService from '../db/ShopService';
 import AddEditBillModal from './AddEditBillModal';
 import swal from 'sweetalert';
+import BillPaymentModal from './BillPaymentModal';
 
 export default class BillManagement extends Component {
     constructor(props) {
@@ -35,6 +36,16 @@ export default class BillManagement extends Component {
                     field: 'amount'
                 },
                 {
+                    headerName: 'Received Amount',
+                    field: 'paidAmount'
+                },
+                {
+                    headerName: 'Remaining Amount',
+                    field: 'remainingAmount',
+                    valueGetter: params =>
+                        params.data.amount - (params.data.paidAmount || 0)
+                },
+                {
                     headerName: 'Created On',
                     field: 'createdOn'
                 },
@@ -55,6 +66,8 @@ export default class BillManagement extends Component {
                 dueOn: ''
             },
             isAddEditModalOpen: false,
+            isBillPaymentModalOpen: false,
+            billId: 0,
             shops: [{ id: 0, name: '' }],
             agents: [{ id: 0, name: '' }],
             billService: new BillService(),
@@ -95,6 +108,30 @@ export default class BillManagement extends Component {
             dueOn: ''
         };
         this.toggleAddEditModal();
+    };
+
+    onAddBillPaymentClick = () => {
+        const selectedData = this.gridApi.getSelectedRows();
+        if (selectedData.length === 0) {
+            swal({
+                title: 'Select bill',
+                text: 'Select a bill row to add its payment.',
+                icon: 'info'
+            });
+            return;
+        } else if (selectedData.length > 1) {
+            swal({
+                title: 'Multiple bill selected.',
+                text: 'Select only one bill row to add its payment.',
+                icon: 'info'
+            });
+            return;
+        }
+
+        this.setState({
+            billId: selectedData[0].id,
+            isBillPaymentModalOpen: true
+        });
     };
 
     onRowDoubleClicked = params => {
@@ -139,6 +176,15 @@ export default class BillManagement extends Component {
         });
     };
 
+    closeBillPaymentModal = () => {
+        this.setState(
+            {
+                isBillPaymentModalOpen: false
+            },
+            this.getAllBills
+        );
+    };
+
     getAllBills = () => {
         this.state.billService.getAll().then(
             successResponse => this.setState({ rowData: successResponse }),
@@ -155,6 +201,14 @@ export default class BillManagement extends Component {
                     bill={this.state.addEditBillModal}
                     modalCloseCallback={this.toggleAddEditModal}
                 />
+
+                <BillPaymentModal
+                    className="primary"
+                    isOpen={this.state.isBillPaymentModalOpen}
+                    billId={this.state.billId}
+                    modalCloseCallback={this.closeBillPaymentModal}
+                />
+
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 mt-2">
                     <button
                         className="btn btn-success"
@@ -167,11 +221,17 @@ export default class BillManagement extends Component {
                         Add Bill
                     </button>
                     <button
+                        className="btn btn-primary ml-1"
+                        onClick={this.onAddBillPaymentClick}>
+                        Add Payment
+                    </button>
+                    <button
                         className="btn btn-danger ml-1"
                         onClick={this.onRemoveSelectedRows}>
                         Remove Selected
                     </button>
                 </div>
+
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div
                         className="ag-theme-blue"
@@ -188,8 +248,7 @@ export default class BillManagement extends Component {
                             animateRows={true}
                             stopEditingWhenGridLosesFocus={true}
                             editType="fullRow"
-                            onGridReady={this.onGridReady}
-                            ></AgGridReact>
+                            onGridReady={this.onGridReady}></AgGridReact>
                     </div>
                 </div>
             </div>

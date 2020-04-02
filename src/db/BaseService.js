@@ -3,49 +3,67 @@ import sqlite from 'sqlite';
 
 class BaseService {
     constructor() {
-        const isDevelopment = process.env.NODE_ENV !== 'production';
-        this.dbFilePath = isDevelopment
-            ? path.resolve(__dirname, 'anas-traders.db')
-            : 'anas-traders.db';
-        this.db = null;
+        this.dbFilePath =
+            process.env.NODE_ENV !== 'production'
+                ? path.resolve(__dirname, 'anas-traders.db')
+                : 'anas-traders.db';
     }
 
     openDatabase = async () => {
-        this.db = await sqlite.open(this.dbFilePath, {
+        const db = await sqlite.open(this.dbFilePath, {
             promise: Promise,
             verbose: true
         });
 
-        this.db.on('trace', query => console.log(query));
+        db.on('trace', query => console.log(query));
+
+        return db;
     };
 
-    closeDatabase = () => this.db.close();
-
-    runAllQuery = async query => {
+    runAllQuery = async (query, params) => {
+        let db = null;
         try {
-            await this.openDatabase();
+            db = await this.openDatabase();
 
-            const rows = await this.db.all(query);
+            const rows = await db.all(query, params);
 
             return rows;
         } catch (error) {
             throw error;
         } finally {
-            await this.db.close();
+            await db.close();
+        }
+    };
+
+    executeQuery = async (query, params) => {
+        let db = null;
+
+        try {
+            db = await this.openDatabase();
+
+            const data = await db.get(query, params);
+
+            return data;
+        } catch (error) {
+            throw error;
+        } finally {
+            await db.close();
         }
     };
 
     runStatement = async (query, params) => {
+        let db = null;
+
         try {
-            await this.openDatabase();
-            
-            const statement = await this.db.prepare(query, params);
+            db = await this.openDatabase();
+
+            const statement = await db.prepare(query, params);
             await statement.run();
             await statement.finalize();
         } catch (error) {
             throw error;
         } finally {
-            await this.db.close();
+            await db.close();
         }
     };
 }
