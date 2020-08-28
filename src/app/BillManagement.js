@@ -10,6 +10,7 @@ import ShopService from '../db/ShopService';
 import AddEditBillModal from './AddEditBillModal';
 import swal from 'sweetalert';
 import BillPaymentModal from './BillPaymentModal';
+import Routes from './Routes';
 
 export default class BillManagement extends Component {
     constructor(props) {
@@ -195,6 +196,7 @@ export default class BillManagement extends Component {
     render() {
         return (
             <div className="row p-1">
+                <Routes/>
                 <AddEditBillModal
                     className="primary"
                     isOpen={this.state.isAddEditModalOpen}

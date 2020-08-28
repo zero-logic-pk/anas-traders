@@ -5,6 +5,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-blue.css';
 
 import ShopService from '../db/ShopService';
+import Routes from './Routes';
 
 class ShopManagement extends Component {
     constructor(props) {
@@ -82,6 +83,8 @@ class ShopManagement extends Component {
     render() {
         return (
             <div className="row p-1">
+                <Routes/>
+                
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 mt-2">
                     <button className="btn btn-success" onClick={this.getShops}>
                         Refresh
@@ -97,6 +100,7 @@ class ShopManagement extends Component {
                         Remove Selected
                     </button>
                 </div>
+                
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div
                         className="ag-theme-blue"
@@ -109,7 +113,6 @@ class ShopManagement extends Component {
                             rowData={this.state.rowData}
                             rowSelection="multiple"
                             animateRows={true}
-                            debug={true}
                             editType="fullRow"
                             onGridReady={this.onGridReady}
                             onRowValueChanged={

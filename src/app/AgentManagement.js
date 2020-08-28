@@ -5,6 +5,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-blue.css';
 
 import AgentService from '../db/AgentService';
+import Routes from './Routes';
 
 class AgentManagement extends Component {
     constructor(props) {
@@ -74,6 +75,7 @@ class AgentManagement extends Component {
     render() {
         return (
             <div className="row p-1">
+                <Routes/>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 mt-2">
                     <button
                         className="btn btn-success"
@@ -103,7 +105,6 @@ class AgentManagement extends Component {
                             rowData={this.state.rowData}
                             rowSelection="multiple"
                             animateRows={true}
-                            debug={true}
                             editType="fullRow"
                             onGridReady={this.onGridReady}
                             onRowValueChanged={
