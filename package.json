@@ -1,5 +1,5 @@
 {
-  "name": "anas-traders-npm",
+  "name": "anas-traders",
   "version": "0.0.1",
   "author": "Muhammad Waqas <waqas4400@gmail.com>",
   "description": "An electron-vue project",
@@ -17,7 +17,13 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "anas-traders-npm",
+    "extraFiles": [
+      {
+          "from": "src/db/anas-traders.db",
+          "to": "anas-traders.db"
+      }
+    ], 
+    "productName": "anas-traders",
     "appId": "com.example.yourapp",
     "directories": {
       "output": "build"
@@ -51,6 +57,7 @@
     }
   },
   "dependencies": {
+    "sqlite": "^4.0.14",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1"

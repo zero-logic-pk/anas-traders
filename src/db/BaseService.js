@@ -10,10 +10,12 @@ class BaseService {
     }
 
     openDatabase = async () => {
+        console.log(this.dbFilePath)
         const db = await sqlite.open(this.dbFilePath, {
             promise: Promise,
             verbose: true
         });
+        console.log(db)
 
         db.on('trace', query => console.log(query));
 
